@@ -72,20 +72,16 @@ const ProjectList = () => {
 const ButtonAddNewProject = () => {
   const { updateProjects } = useProject();
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    reset,
-    formState: { errors },
-  } = useForm<NewTaskInputProps>({
-    defaultValues: {
-      project: "",
-      priority: "low",
-      duedate: new Date(),
-      tags: "",
-    },
-  });
+  const { register, handleSubmit, control, reset } = useForm<NewTaskInputProps>(
+    {
+      defaultValues: {
+        project: "",
+        priority: "low",
+        duedate: new Date(),
+        tags: "",
+      },
+    }
+  );
   const onSubmit: SubmitHandler<NewTaskInputProps> = (data) => {
     const payload = {
       id: Date.now(),
@@ -232,13 +228,7 @@ const ProjectInfo = () => {
 const AddNewTasks = () => {
   const { updateTask } = useProject();
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    reset,
-    formState: { errors },
-  } = useForm<Task>({
+  const { register, handleSubmit, control, reset } = useForm<Task>({
     defaultValues: {
       id: 0,
       content: "",

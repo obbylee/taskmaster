@@ -29,21 +29,7 @@ import {
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import useProject from "@/hooks/useProject";
 import { Textarea } from "./ui/textarea";
-
-type Tasks = {
-  id: number;
-  name: string;
-  state: "todo" | "inprogress" | "completed";
-};
-
-type Inputs = {
-  id: number;
-  project: string;
-  priority: string;
-  duedate: Date;
-  tags: string;
-  tasks: Tasks[];
-};
+import { Task, NewTaskInputProps } from "@/types";
 
 export default function Header() {
   return (
@@ -92,7 +78,7 @@ const ButtonAddNewProject = () => {
     control,
     reset,
     formState: { errors },
-  } = useForm<Inputs>({
+  } = useForm<NewTaskInputProps>({
     defaultValues: {
       project: "",
       priority: "low",
@@ -100,7 +86,7 @@ const ButtonAddNewProject = () => {
       tags: "",
     },
   });
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<NewTaskInputProps> = (data) => {
     const payload = {
       id: Date.now(),
       project: data.project,
@@ -243,12 +229,6 @@ const ProjectInfo = () => {
   );
 };
 
-type Task = {
-  id: number;
-  content: string;
-  state: "todo" | "inprogress" | "completed";
-};
-
 const AddNewTasks = () => {
   const { updateTask } = useProject();
 
@@ -260,14 +240,14 @@ const AddNewTasks = () => {
     formState: { errors },
   } = useForm<Task>({
     defaultValues: {
-      id: Date.now(),
+      id: 0,
       content: "",
       state: "todo",
     },
   });
   const onSubmit: SubmitHandler<Task> = (data) => {
     const payload = {
-      id: data.id,
+      id: Date.now(),
       content: data.content,
       state: data.state,
     };

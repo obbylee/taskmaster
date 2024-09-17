@@ -1,29 +1,6 @@
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { createContext, FC, ReactNode, useState } from "react";
-
-type Task = {
-  id: number;
-  content: string;
-  state: "todo" | "inprogress" | "completed";
-};
-
-type Project = {
-  id: number;
-  project: string;
-  priority: string;
-  duedate: string;
-  tags: string;
-  tasks: Task[];
-};
-
-type ProjectContextProps = {
-  projects: string;
-  currentActiveProject: Project;
-  currentTasks: Task[];
-  updateProjects: (value: Project) => void;
-  updateTask: (task: Task) => void;
-  updateActiveProject: (id: number) => void;
-};
+import { Task, Project, ProjectContextProps } from "@/types";
 
 export const ProjectContext = createContext<ProjectContextProps | null>(null);
 
@@ -73,6 +50,26 @@ export const ProjectProvider: FC<{ children: ReactNode }> = ({ children }) => {
     setActiveProject(id);
   }
 
+  function deleteTask(task: Task) {
+    const data = JSON.parse(projects);
+    try {
+      const indexOfProject = allProjects.indexOf(currentActiveProject);
+
+      const isExist = data[indexOfProject]?.tasks?.find(
+        (current: Task) => current.id === task.id
+      );
+
+      if (isExist) {
+        const indexOfTask = data[indexOfProject]?.tasks?.indexOf(isExist);
+        data[indexOfProject]?.tasks?.splice(indexOfTask, 1);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setProjects(JSON.stringify(data));
+    }
+  }
+
   return (
     <ProjectContext.Provider
       value={{
@@ -82,6 +79,7 @@ export const ProjectProvider: FC<{ children: ReactNode }> = ({ children }) => {
         updateProjects,
         updateTask,
         updateActiveProject,
+        deleteTask,
       }}
     >
       {children}
